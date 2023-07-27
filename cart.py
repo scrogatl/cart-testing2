@@ -167,6 +167,7 @@ def insert_data():
 # Gets all items from a specific userid
 def get_items(userid):
     app.logger.info('/cart/getItems')
+    unpacked_data = ''
     with tracer.start_as_current_span("GET cart_items") as span:
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
@@ -174,7 +175,6 @@ def get_items(userid):
         else:
             app.logger.info('empty - no data for key %s', userid)
             unpacked_data = 0
-
     return unpacked_data
 
 
