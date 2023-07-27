@@ -274,40 +274,40 @@ def add_item(userid):
     with tracer.start_as_current_span("POST add_item") as span:
         app.logger.info('the content to add is %s', content)
 
-    jsonobj = get_items(userid)
+        jsonobj = get_items(userid)
 
-    if jsonobj:
+        if jsonobj:
 
-        key_index = 0
-        while key_index < len(jsonobj):
-            if jsonobj[key_index]['itemid'] == content['itemid']:
-                jsonobj[key_index]['quantity'] = int(jsonobj[key_index]['quantity']) + int(content['quantity'])
-                key_index = len(jsonobj) + 1
+            key_index = 0
+            while key_index < len(jsonobj):
+                if jsonobj[key_index]['itemid'] == content['itemid']:
+                    jsonobj[key_index]['quantity'] = int(jsonobj[key_index]['quantity']) + int(content['quantity'])
+                    key_index = len(jsonobj) + 1
+                    payload = json.dumps(jsonobj)
+                    try:
+                        app.logger.info('inserting cart for %s with following contents %s', userid, json.dumps(content))
+                        rConn.set(userid, payload)
+                    except Exception as e:
+                        app.logger.error('Could not insert data %s into redis, error is %s', json.dumps(content), e)
+                else:
+                    key_index += 1
+
+            if key_index <= len(jsonobj):
+                jsonobj.append(content)
                 payload = json.dumps(jsonobj)
                 try:
                     app.logger.info('inserting cart for %s with following contents %s', userid, json.dumps(content))
                     rConn.set(userid, payload)
                 except Exception as e:
                     app.logger.error('Could not insert data %s into redis, error is %s', json.dumps(content), e)
-            else:
-                key_index += 1
 
-        if key_index <= len(jsonobj):
-            jsonobj.append(content)
-            payload = json.dumps(jsonobj)
+        else:
+            payload = [content]
+            app.logger.info("added to payload for new insert %s", json.dumps(payload))
             try:
-                app.logger.info('inserting cart for %s with following contents %s', userid, json.dumps(content))
-                rConn.set(userid, payload)
+                rConn.set(userid, json.dumps(payload))
             except Exception as e:
                 app.logger.error('Could not insert data %s into redis, error is %s', json.dumps(content), e)
-
-    else:
-        payload = [content]
-        app.logger.info("added to payload for new insert %s", json.dumps(payload))
-        try:
-            rConn.set(userid, json.dumps(payload))
-        except Exception as e:
-            app.logger.error('Could not insert data %s into redis, error is %s', json.dumps(content), e)
 
     return jsonify({"userid": userid})
 
