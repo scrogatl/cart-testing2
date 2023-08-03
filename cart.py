@@ -320,19 +320,21 @@ def add_item(userid):
 def replace_cart(userid):
     content = request.json
 
-    app.logger.info('the content to modify is %s', content)
+    with tracer.start_as_current_span("POST replace_cart") as span:
 
-    jsonobj = get_items(userid)
+        app.logger.info('the content to modify is %s', content)
 
-    payload = []
-    for item in content['cart']:
-        payload.append(item)
+        jsonobj = get_items(userid)
 
-    app.logger.info("added to payload for new insert %s", json.dumps(payload))
-    try:
-        rConn.set(userid, json.dumps(payload))
-    except Exception as e:
-        app.logger.error('Could not insert data %s into redis, error is %s', json.dumps(content), e)
+        payload = []
+        for item in content['cart']:
+            payload.append(item)
+
+        app.logger.info("added to payload for new insert %s", json.dumps(payload))
+        try:
+            rConn.set(userid, json.dumps(payload))
+        except Exception as e:
+            app.logger.error('Could not insert data %s into redis, error is %s', json.dumps(content), e)
 
     return jsonify({"userid": userid})
 
