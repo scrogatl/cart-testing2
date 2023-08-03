@@ -175,7 +175,7 @@ def get_items(userid):
             app.logger.info('got data')
             current_span.add_event("got data")
         else:
-            current_span.add_event(empty - no data for key %s', userid)
+            current_span.add_event("empty - no data for key %s", userid)
             app.logger.info('empty - no data for key %s', userid)
             unpacked_data = 0
     return unpacked_data
