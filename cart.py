@@ -58,28 +58,12 @@ resource = Resource(attributes={
       "application": "acme-fitness"
     })
 
-span_exporter = OTLPSpanExporter(
-    # optional, these are default values
-    endpoint="endpoint=http://wavefront-proxy.scrog.svc.cluster.local:4317",
-    # credentials=ChannelCredentials(credentials),
-    # headers=(("metadata", "metadata")),
-)
-tracer_provider = TracerProvider(resource=resource)
-trace.set_tracer_provider(tracer_provider)
-span_processor = BatchSpanProcessor(span_exporter)
-tracer_provider.add_span_processor(span_processor)
-
-# Configure the tracer to use the collector exporter
-tracer = trace.get_tracer_provider().get_tracer("acme-fitness.tracer")
-### Above is from the TO github example
-
-### Below works, from me reading docs.. 
-# provider = TracerProvider(resource=resource)
-# trace.set_tracer_provider(provider)
-# processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://wavefront-proxy.scrog.svc.cluster.local:4317"))
-# provider.add_span_processor(processor)
-# trace.set_tracer_provider(provider)
-# tracer = trace.get_tracer("acme-fitness.tracer")
+provider = TracerProvider(resource=resource)
+trace.set_tracer_provider(provider)
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://wavefront-proxy.scrog.svc.cluster.local:4317"))
+provider.add_span_processor(processor)
+trace.set_tracer_provider(provider)
+tracer = trace.get_tracer("acme-fitness.tracer")
 
 def set_cloud_role(envelope):
     envelope.tags['ai.cloud.role'] = 'cart-service'
