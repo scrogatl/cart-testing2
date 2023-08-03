@@ -60,7 +60,7 @@ resource = Resource(attributes={
 
 span_exporter = OTLPSpanExporter(
     # optional, these are default values
-    endpoint="endpoint="http://wavefront-proxy.scrog.svc.cluster.local:4317",
+    endpoint="endpoint=http://wavefront-proxy.scrog.svc.cluster.local:4317",
     # credentials=ChannelCredentials(credentials),
     # headers=(("metadata", "metadata")),
 )
