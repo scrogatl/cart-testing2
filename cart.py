@@ -169,10 +169,10 @@ def get_items(userid):
     app.logger.info('/cart/getItems')
     unpacked_data = ''
     with tracer.start_as_current_span("GET cart_items") as span:
-        current_span = tracer.get_current_span()
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
             app.logger.info('got data')
+            current_span = trace.get_current_span()
             current_span.add_event("got data")
         else:
             current_span.add_event("empty - no data for key")
@@ -276,6 +276,9 @@ def add_item(userid):
 
     with tracer.start_as_current_span("POST add_item") as span:
         app.logger.info('the content to add is %s', content)
+        current_span = trace.get_current_span()
+        current_span.add_event("adding data... will add actuall data item later")
+
 
         jsonobj = get_items(userid)
 
