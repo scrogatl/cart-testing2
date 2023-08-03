@@ -50,7 +50,7 @@ auth_mode = int(environ['AUTH_MODE']) if environ.get('AUTH_MODE') not in (None, 
 
 # initializing flask
 app = Flask(__name__)
-FlaskInstrumentor().instrument_app(app)
+
 
 # Service name is required for most backends
 resource = Resource(attributes={
@@ -58,6 +58,7 @@ resource = Resource(attributes={
       "application": "acme-fitness"
     })
 provider = TracerProvider(resource=resource)
+trace.set_tracer_provider(provider)
 processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://wavefront-proxy.scrog.svc.cluster.local:4317"))
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
@@ -174,7 +175,7 @@ def get_items(userid):
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
             app.logger.info('got data')
-            span.add_event("got data")
+            span.add_event("got data", {"event_attributes": 1}))
         else:
             app.logger.info('empty - no data for key %s', userid)
             unpacked_data = 0
