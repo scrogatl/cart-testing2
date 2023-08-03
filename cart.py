@@ -169,10 +169,13 @@ def get_items(userid):
     app.logger.info('/cart/getItems')
     unpacked_data = ''
     with tracer.start_as_current_span("GET cart_items") as span:
+        current_span = trace.get_current_span()
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
             app.logger.info('got data')
+            current_span.add_event("got data")
         else:
+            current_span.add_event(empty - no data for key %s', userid)
             app.logger.info('empty - no data for key %s', userid)
             unpacked_data = 0
     return unpacked_data
