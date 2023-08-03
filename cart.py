@@ -14,6 +14,7 @@ from flask import Flask
 from redis_conn import redis_connection
 
 from opentelemetry import trace
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor                                        
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
@@ -49,6 +50,7 @@ auth_mode = int(environ['AUTH_MODE']) if environ.get('AUTH_MODE') not in (None, 
 
 # initializing flask
 app = Flask(__name__)
+FlaskInstrumentor().instrument_app(app)
 
 # Service name is required for most backends
 resource = Resource(attributes={
