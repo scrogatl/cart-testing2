@@ -175,7 +175,7 @@ def get_items(userid):
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
             app.logger.info('got data')
-            span.add_event("got data", {"event_attributes": 1}))
+            span.add_event("got data", {"event_attributes": 1})
         else:
             app.logger.info('empty - no data for key %s', userid)
             unpacked_data = 0
