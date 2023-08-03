@@ -169,7 +169,7 @@ def get_items(userid):
     app.logger.info('/cart/getItems')
     unpacked_data = ''
     with tracer.start_as_current_span("GET cart_items") as span:
-        current_span = trace.get_current_span()
+        current_span = tracer.get_current_span()
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
             app.logger.info('got data')
