@@ -20,6 +20,7 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExport
 from opentelemetry.trace.propagation.tracecontext import \
     TraceContextTextMapPropagator
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.instrumentation.redis import RedisInstrumentor
 
 dictConfig({
     'version': 1,
@@ -74,7 +75,7 @@ auth = HTTPTokenAuth('Bearer')
 
 # initializing redis connections on localhost and port 6379
 # If error terminates process- entire cart is shut down
-
+RedisInstrumentor().instrument()
 rConn = redis_connection(app.logger)
 
 # errorhandler for specific responses
