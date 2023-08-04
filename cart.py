@@ -11,7 +11,7 @@ from flask import render_template, jsonify
 from flask import request
 from flask_httpauth import HTTPTokenAuth
 from flask import Flask
-from redis.conn import redis.connection
+from redis.conn import redis_connection
 
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
