@@ -50,7 +50,7 @@ auth_mode = int(environ['AUTH_MODE']) if environ.get('AUTH_MODE') not in (None, 
 
 # initializing flask
 app = Flask(__name__)
-FlaskInstrumentor().instrument_app(app)
+# FlaskInstrumentor().instrument_app(app)
 
 
 
@@ -178,7 +178,7 @@ def get_items(userid):
         if rConn.exists(userid):
             unpacked_data = json.loads(rConn.get(userid).decode('utf-8'))
             app.logger.info('got data')
-            # span.add_event("got data", {"event_attributes": 1})
+            span.add_event("got data", {"event_attributes": 1})
         else:
             app.logger.info('empty - no data for key %s', userid)
             unpacked_data = 0
