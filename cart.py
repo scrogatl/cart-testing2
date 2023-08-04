@@ -50,6 +50,8 @@ auth_mode = int(environ['AUTH_MODE']) if environ.get('AUTH_MODE') not in (None, 
 
 # initializing flask
 app = Flask(__name__)
+FlaskInstrumentor().instrument_app(app)
+
 
 
 # Service name is required for most backends
